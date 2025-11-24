@@ -8,6 +8,7 @@ use App\Models\Wallet;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\ValueObjects\Money;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final readonly class WalletService
 {
@@ -42,7 +43,7 @@ final readonly class WalletService
                 'amount' => $amount->getAmount(),
                 'balance_after' => $newBalance,
                 'description' => $description !== '' && $description !== '0' ? $description : 'Wallet top-up',
-                'reference_id' => uniqid('REF_'),
+                'reference_id' => 'REF_'.Str::random(12),
             ]);
 
             // Notify user

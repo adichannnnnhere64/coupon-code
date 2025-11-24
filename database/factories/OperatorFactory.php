@@ -59,13 +59,11 @@ final class OperatorFactory extends Factory
 
     private function getOperatorCodeForCountry(Country $country): string
     {
-        $codes = match ($country->code) {
-            'IN' => ['JIO', 'AIRTEL', 'VODA', 'BSNL', 'MTNL'],
-            'US' => ['VERIZ', 'ATT', 'TMOB', 'SPRINT'],
-            'UK' => ['EE', 'O2', 'VODUK', 'THREE'],
-            default => [$this->faker->unique()->lexify('???')],
+        return match ($country->code) {
+            'IN' => $this->faker->unique()->randomElement(['JIO', 'AIRTEL', 'VODA', 'BSNL', 'MTNL']),
+            'US' => $this->faker->unique()->randomElement(['VERIZ', 'ATT', 'TMOB', 'SPRINT']),
+            'UK' => $this->faker->unique()->randomElement(['EE', 'O2', 'VODUK', 'THREE']),
+            default => $this->faker->unique()->lexify('???'),
         };
-
-        return $this->faker->randomElement($codes);
     }
 }

@@ -12,6 +12,7 @@ use App\Repositories\Contracts\CouponRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\ValueObjects\Money;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final readonly class CouponService
 {
@@ -45,7 +46,7 @@ final readonly class CouponService
             $transaction = CouponTransaction::query()->create([
                 'user_id' => $dto->userId,
                 'coupon_id' => $coupon->id,
-                'transaction_id' => uniqid('TXN'),
+                'transaction_id' => 'TXN-'.Str::random(12),
                 'amount' => $coupon->selling_price,
                 'delivery_methods' => json_encode($dto->deliveryMethods),
                 'status' => 'success',

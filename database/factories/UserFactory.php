@@ -4,36 +4,60 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends Factory<User>
- */
 final class UserFactory extends Factory
 {
-    private static ?string $password = null;
-
-    /**
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => '+91'.$this->faker->numerify('##########'),
+            'password' => Hash::make('password'),
+            'status' => $this->faker->randomElement(['pending', 'active', 'suspended']),
             'email_verified_at' => now(),
-            'password' => self::$password ??= Hash::make('password'),
+            'phone_verified_at' => $this->faker->optional(0.8)->dateTimeThisYear(),
             'remember_token' => Str::random(10),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
-    public function unverified(): self
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => 'active',
+        ]);
+    }
+
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => 'pending',
+        ]);
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => 'suspended',
+        ]);
+    }
+
+    public function unverifiedEmail(): static
     {
         return $this->state(fn (array $attributes): array => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function unverifiedPhone(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'phone_verified_at' => null,
         ]);
     }
 }

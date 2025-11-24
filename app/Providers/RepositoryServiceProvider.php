@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\Contracts\CouponRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\Repositories\Eloquent\CouponRepository;
+use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Eloquent\WalletRepository;
 use Illuminate\Support\ServiceProvider;
 
 final class RepositoryServiceProvider extends ServiceProvider

@@ -8,7 +8,8 @@ use Exception;
 
 final class CouponUnavailableException extends Exception
 {
-    protected string $message = 'Coupon is not available';
-
-    protected int $code = 422;
+    public function __construct()
+    {
+        parent::__construct('Coupon out of stock', 422);
+    }
 }

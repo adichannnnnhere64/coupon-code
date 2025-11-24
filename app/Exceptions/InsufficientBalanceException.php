@@ -8,7 +8,8 @@ use Exception;
 
 final class InsufficientBalanceException extends Exception
 {
-    protected string $message = 'Insufficient wallet balance';
-
-    protected int $code = 422;
+    public function __construct()
+    {
+        parent::__construct('Insufficient wallet balance', 422);
+    }
 }
