@@ -50,4 +50,19 @@ final class User extends Authenticatable implements MustVerifyEmail
             'updated_at' => 'datetime',
         ];
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function couponTransactions()
+    {
+        return $this->hasMany(CouponTransaction::class);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
 }
