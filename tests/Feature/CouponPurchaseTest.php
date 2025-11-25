@@ -18,7 +18,7 @@ test('user can purchase coupon', function (): void {
         'delivery_methods' => ['sms', 'email'],
     ]);
 
-    $response->assertStatus(200)
+    $response->assertStatus(201)
         ->assertJsonStructure([
             'data' => [
                 'id',
@@ -36,11 +36,13 @@ test('user can purchase coupon', function (): void {
         'status' => 'success',
     ]);
 
-    expect($this->wallet->fresh()->balance)->toBe(900.00);
+    expect((float) $this->wallet->fresh()->balance)->toBe(900.00);
     expect($coupon->fresh()->stock_quantity)->toBe($coupon->stock_quantity - 1);
 });
 
 test('user cannot purchase out of stock coupon', function (): void {
+    $this->withExceptionHandling();
+
     $coupon = Coupon::factory()->outOfStock()->active()->create();
 
     $response = $this->postJson('/api/coupons/purchase', [
@@ -48,10 +50,18 @@ test('user cannot purchase out of stock coupon', function (): void {
         'delivery_methods' => ['sms'],
     ]);
 
-    $response->assertStatus(422);
+    $response->assertStatus(422)
+        ->assertJson([
+            'status' => 'error',
+            'code' => 10000, // ExceptionCode::INSUFFICIENT_BALANCE
+            'message' => 'Coupon unavailable', // matches getMessage()
+        ]);
 });
 
 test('user cannot purchase with insufficient balance', function (): void {
+
+    $this->withExceptionHandling();
+
     $this->wallet->update(['balance' => 50.00]);
     $coupon = Coupon::factory()->inStock()->active()->create(['selling_price' => 100.00]);
 
@@ -60,5 +70,11 @@ test('user cannot purchase with insufficient balance', function (): void {
         'delivery_methods' => ['sms'],
     ]);
 
-    $response->assertStatus(422);
+    $response->assertStatus(422) // the status from your ExceptionCode
+        ->assertJson([
+            'status' => 'error',
+            'code' => 10001, // ExceptionCode::INSUFFICIENT_BALANCE
+            'message' => 'Insufficient balance', // matches getMessage()
+        ]);
+
 });

@@ -25,14 +25,22 @@ final class WalletRepository implements WalletRepositoryInterface
 
     public function updateBalance(int $userId, float $newBalance): bool
     {
-        return Wallet::query()->where('user_id', $userId)
+        return (bool) Wallet::query()->where('user_id', $userId)
             ->update(['balance' => $newBalance]);
     }
 
+    /** @param array<string, mixed> $transactionData */
     public function addTransaction(int $walletId, array $transactionData): WalletTransaction
     {
-        return WalletTransaction::query()->create(array_merge($transactionData, [
+
+        /** @var array<string, mixed> $data */
+        $data = array_merge($transactionData, [
             'wallet_id' => $walletId,
-        ]));
+        ]);
+
+        /** @var WalletTransaction */
+        $walletTransaction = WalletTransaction::query()->create($data);
+
+        return $walletTransaction;
     }
 }

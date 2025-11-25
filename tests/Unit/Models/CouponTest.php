@@ -13,8 +13,8 @@ it('can create a coupon', function (): void {
         'selling_price' => 105.00,
     ]);
 
-    expect($coupon->denomination)->toBe(100.00);
-    expect($coupon->selling_price)->toBe(105.00);
+    expect((float) $coupon->denomination)->toBe(100.00);
+    expect((float) $coupon->selling_price)->toBe(105.00);
 });
 
 it('has operator relationship', function (): void {

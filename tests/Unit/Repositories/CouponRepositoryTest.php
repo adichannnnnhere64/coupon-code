@@ -39,7 +39,7 @@ it('can decrement stock', function (): void {
 
     $result = $this->repository->decrementStock($coupon->id);
 
-    expect($result)->toBeTrue();
+    expect($result)->toBe(1);
     expect($coupon->fresh()->stock_quantity)->toBe(9);
 });
 

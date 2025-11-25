@@ -58,7 +58,7 @@ final class Coupon extends Model
 
     public function decrementStock(): void
     {
-        throw_if($this->stock_quantity <= 0, new CouponUnavailableException('Coupon out of stock'));
+        throw_if($this->stock_quantity <= 0, CouponUnavailableException::class, 'Coupon out of stock');
 
         $this->decrement('stock_quantity');
     }

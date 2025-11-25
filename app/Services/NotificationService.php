@@ -2,17 +2,24 @@
 
 declare(strict_types=1);
 
+// app/Services/NotificationService.php
+
 namespace App\Services;
 
-use App\Mail\CouponDelivery;
+use App\Models\Notification;
+use App\Contracts\Services\NotificationServiceInterface;
+use App\Mail\CouponDeliveryMail;
+use App\Mail\LowStockAlertMail;
+use App\Mail\WalletCreditMail;
 use App\Models\Coupon;
 use App\Models\CouponTransaction;
-use App\Models\Notification;
 use App\Models\User;
 use App\ValueObjects\Money;
+use Exception;
+use Illuminate\Support\Facades\Log as FacadesLog;
 use Illuminate\Support\Facades\Mail;
 
-final class NotificationService
+final class NotificationService implements NotificationServiceInterface
 {
     public function sendCouponDelivery(CouponTransaction $transaction, array $deliveryMethods): void
     {
@@ -21,14 +28,18 @@ final class NotificationService
 
         foreach ($deliveryMethods as $method) {
             switch ($method) {
-                case 'sms':
-                    $this->sendSMS();
-                    break;
                 case 'email':
-                    $this->sendEmail($user->email, 'Coupon Delivery', $this->formatCouponEmail($coupon));
+                    $this->sendCouponEmail($transaction);
+                    break;
+                case 'sms':
+                    $this->sendCouponSMS();
                     break;
                 case 'whatsapp':
-                    $this->sendWhatsApp();
+                    $this->sendCouponWhatsApp();
+                    break;
+                case 'print':
+                    // Generate PDF for printing
+                    $this->generatePrintableCoupon();
                     break;
             }
         }
@@ -47,8 +58,16 @@ final class NotificationService
 
     public function sendWalletCreditNotification(int $userId, Money $amount): void
     {
-        User::query()->find($userId);
+        $user = User::query()->find($userId);
+        $wallet = $user->wallet;
 
+        // Send email notification
+        $this->sendWalletCreditEmail($user, $amount, $wallet->balance);
+
+        // Send other notifications if needed
+        $this->sendPushNotification();
+
+        // Log notification
         Notification::query()->create([
             'user_id' => $userId,
             'type' => 'wallet_credit',
@@ -58,35 +77,83 @@ final class NotificationService
             'status' => 'sent',
             'sent_at' => now(),
         ]);
-
-        // Send actual notifications
-        $this->sendPushNotification();
     }
 
-    private function sendSMS(): void
+    public function sendLowStockAlert(Coupon $coupon): void
     {
-        // Integrate with SMS gateway like Twilio, MSG91, etc.
-        // Implementation depends on your SMS provider
+        // Get admin users to notify
+        $adminUsers = User::query()->where('email', 'like', '%admin%')
+            ->orWhere('email', 'like', '%@admin.%')
+            ->get();
+
+        foreach ($adminUsers as $admin) {
+            $this->sendLowStockEmail($admin, $coupon);
+        }
+
+        // Log notification
+        Notification::query()->create([
+            'user_id' => null, // Broadcast to all admins
+            'type' => 'low_stock',
+            'title' => 'Low Stock Alert',
+            'message' => "Coupon {$coupon->coupon_code} is running low on stock",
+            'channels' => ['email'],
+            'status' => 'sent',
+            'sent_at' => now(),
+        ]);
     }
 
-    private function sendEmail(string $email, string $subject, string $message): void
+    private function sendCouponEmail(CouponTransaction $transaction): void
     {
-        // Use Laravel Mail
-        Mail::to($email)->send(new CouponDelivery($subject, $message));
+        try {
+            Mail::to($transaction->user->email)
+                ->send(new CouponDeliveryMail($transaction));
+        } catch (Exception $e) {
+            FacadesLog::error('Failed to send coupon email: '.$e->getMessage());
+        }
     }
 
-    private function sendWhatsApp(): void
+    private function sendWalletCreditEmail(User $user, Money $amount, float|string $newBalance): void
     {
-        // Integrate with WhatsApp Business API
+        try {
+            Mail::to($user->email)
+                ->send(new WalletCreditMail(
+                    $amount->getAmount(),
+                    $amount->getCurrency(),
+                    $newBalance
+                ));
+        } catch (Exception $e) {
+            FacadesLog::error('Failed to send wallet credit email: '.$e->getMessage());
+        }
+    }
+
+    private function sendLowStockEmail(User $admin, Coupon $coupon): void
+    {
+        try {
+            Mail::to($admin->email)
+                ->send(new LowStockAlertMail($coupon));
+        } catch (Exception $e) {
+            FacadesLog::error('Failed to send low stock alert email: '.$e->getMessage());
+        }
+    }
+
+    // Keep your existing SMS, WhatsApp, and other methods...
+    private function sendCouponSMS(): void
+    {
+        // SMS implementation
+    }
+
+    private function sendCouponWhatsApp(): void
+    {
+        // WhatsApp implementation
+    }
+
+    private function generatePrintableCoupon(): void
+    {
+        // PDF generation implementation
     }
 
     private function sendPushNotification(): void
     {
-        // Integrate with FCM (Firebase Cloud Messaging)
-    }
-
-    private function formatCouponEmail(Coupon $coupon): string
-    {
-        return view('emails.coupon-delivery', ['coupon' => $coupon])->render();
+        // Push notification implementation
     }
 }

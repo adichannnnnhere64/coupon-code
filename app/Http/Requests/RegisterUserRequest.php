@@ -16,11 +16,11 @@ final class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|unique:users,phone',
-            'password' => 'required|string|min:8|confirmed',
-            'country_code' => 'required|exists:countries,code',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'phone' => ['required', 'string', 'unique:users,phone'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'country_code' => ['required', 'exists:countries,code'],
         ];
     }
 }

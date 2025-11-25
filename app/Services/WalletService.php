@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Wallet;
+use App\Models\WalletTransaction;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\ValueObjects\Money;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -17,7 +19,7 @@ final readonly class WalletService
         private NotificationService $notificationService
     ) {}
 
-    public function getWalletBalance(int $userId): float
+    public function getWalletBalance(int $userId): float|string
     {
         $wallet = $this->walletRepository->findByUserId($userId);
 
@@ -26,7 +28,7 @@ final readonly class WalletService
 
     public function addBalance(int $userId, Money $amount, string $description = ''): WalletTransaction
     {
-        return DB::transaction(function () use ($userId, $amount, $description): \App\Models\WalletTransaction {
+        return DB::transaction(function () use ($userId, $amount, $description): WalletTransaction {
             $wallet = $this->walletRepository->findByUserId($userId);
 
             if (! $wallet instanceof Wallet) {
@@ -53,7 +55,11 @@ final readonly class WalletService
         });
     }
 
-    public function getTransactionHistory(int $userId, array $filters = [])
+    /**
+     * @param  array<int, mixed>  $filters
+/** @return Collection<int, WalletTransaction>
+     * */
+    public function getTransactionHistory(int $userId, array $filters = []): Collection
     {
         $wallet = $this->walletRepository->findByUserId($userId);
 

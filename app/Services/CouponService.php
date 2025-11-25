@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Services\NotificationServiceInterface;
 use App\DTOs\PurchaseCouponDTO;
-use App\Exceptions\CouponUnavailableException;
-use App\Exceptions\InsufficientBalanceException;
+use App\Exceptions\CustomException;
 use App\Models\CouponTransaction;
 use App\Repositories\Contracts\CouponRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
@@ -19,20 +19,24 @@ final readonly class CouponService
     public function __construct(
         private CouponRepositoryInterface $couponRepository,
         private WalletRepositoryInterface $walletRepository,
-        private NotificationService $notificationService
+        private NotificationServiceInterface $notificationService
     ) {}
 
     public function purchaseCoupon(PurchaseCouponDTO $dto): CouponTransaction
     {
         // Find and validate coupon
         $coupon = $this->couponRepository->findAvailableById($dto->couponId);
-        throw_unless($coupon, new CouponUnavailableException('Coupon not available'));
+        throw_unless($coupon,
+            CustomException::couponUnavailable()
+        );
 
         // Check wallet balance
         $wallet = $this->walletRepository->findByUserId($dto->userId);
         $amount = new Money($coupon->selling_price);
 
-        throw_unless($wallet->hasSufficientBalance($amount), new InsufficientBalanceException());
+        throw_unless($wallet->hasSufficientBalance($amount),
+            CustomException::insufficientBalance()
+        );
 
         // Process transaction within database transaction
         return DB::transaction(function () use ($wallet, $coupon, $dto, $amount) {

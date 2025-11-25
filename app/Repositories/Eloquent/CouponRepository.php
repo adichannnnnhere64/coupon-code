@@ -26,7 +26,7 @@ final class CouponRepository implements CouponRepositoryInterface
             ->first();
     }
 
-    public function decrementStock(int $couponId): bool
+    public function decrementStock(int $couponId): int
     {
         return Coupon::query()->where('id', $couponId)
             ->where('stock_quantity', '>', 0)

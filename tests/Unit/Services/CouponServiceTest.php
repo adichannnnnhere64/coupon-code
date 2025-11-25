@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Contracts\Services\NotificationServiceInterface;
 use App\DTOs\PurchaseCouponDTO;
-use App\Exceptions\CouponUnavailableException;
-use App\Exceptions\InsufficientBalanceException;
+use App\Exceptions\CoreException;
 use App\Models\Coupon;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Repositories\Contracts\CouponRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\Services\CouponService;
-use App\Services\NotificationService;
 
 beforeEach(function (): void {
     $this->couponRepository = mock(CouponRepositoryInterface::class);
     $this->walletRepository = mock(WalletRepositoryInterface::class);
-    $this->notificationService = mock(NotificationService::class);
+    $this->notificationService = mock(NotificationServiceInterface::class);
 
     $this->service = new CouponService(
         $this->couponRepository,
@@ -63,9 +62,10 @@ it('throws exception for unavailable coupon', function (): void {
         ->andReturn(null);
 
     $this->service->purchaseCoupon($dto);
-})->throws(CouponUnavailableException::class);
+})->throws(CoreException::class, 'Coupon unavailable', 422);
 
 it('throws exception for insufficient balance', function (): void {
+    /* $this->withExceptionHandling(); */
     $user = User::factory()->create();
     $coupon = Coupon::factory()->create(['selling_price' => 200.00]);
     $wallet = Wallet::factory()->forUser($user)->create(['balance' => 100.00]);
@@ -80,4 +80,5 @@ it('throws exception for insufficient balance', function (): void {
         ->andReturn($wallet);
 
     $this->service->purchaseCoupon($dto);
-})->throws(InsufficientBalanceException::class);
+
+})->throws(CoreException::class, 'Insufficient balance', 422);

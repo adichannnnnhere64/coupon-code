@@ -9,11 +9,11 @@ use App\ValueObjects\Money;
 it('can create a wallet', function (): void {
     $wallet = Wallet::factory()->create(['balance' => 1000.00]);
 
-    expect($wallet->balance)->toBe(1000.00);
+    expect((float) $wallet->balance)->toBe(1000.00);
 });
 
 it('has user relationship', function (): void {
-    $wallet = Wallet::factory()->withUser()->create();
+    $wallet = Wallet::factory()->create(); // Remove withUser() call
 
     expect($wallet->user)->not->toBeNull();
 });
@@ -33,7 +33,7 @@ it('can deduct amount', function (): void {
 
     $wallet->deductAmount($amount);
 
-    expect($wallet->balance)->toBe(300.00);
+    expect((float) $wallet->balance)->toBe(300.00);
 });
 
 it('throws exception when deducting insufficient balance', function (): void {
@@ -49,5 +49,5 @@ it('can add amount', function (): void {
 
     $wallet->addAmount($amount);
 
-    expect($wallet->balance)->toBe(700.00);
+    expect((float) $wallet->balance)->toBe(700.00);
 });

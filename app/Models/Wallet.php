@@ -31,12 +31,13 @@ final class Wallet extends Model
 
     public function hasSufficientBalance(Money $amount): bool
     {
-        return $this->balance >= $amount->getAmount();
+        /* dd((float) $this->balance, $amount->getAmount()); */
+        return (float) $this->balance >= $amount->getAmount();
     }
 
     public function deductAmount(Money $amount): void
     {
-        throw_unless($this->hasSufficientBalance($amount), new InsufficientBalanceException());
+        throw_unless($this->hasSufficientBalance($amount), InsufficientBalanceException::class);
 
         $this->balance -= $amount->getAmount();
         $this->save();

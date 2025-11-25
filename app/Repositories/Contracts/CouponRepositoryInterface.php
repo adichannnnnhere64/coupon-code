@@ -12,7 +12,7 @@ interface CouponRepositoryInterface
 
     public function findAvailableById(int $id): ?Coupon;
 
-    public function decrementStock(int $couponId): bool;
+    public function decrementStock(int $couponId): int;
 
     public function getLowStockCoupons();
 }

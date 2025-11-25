@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Models\WalletTransaction;
 use App\Models\Wallet;
+use App\Models\WalletTransaction;
 
 beforeEach(function (): void {
     $this->user = $this->signIn();
@@ -26,7 +26,7 @@ test('user can add money to wallet', function (): void {
         'payment_method' => 'stripe',
     ]);
 
-    $response->assertStatus(200)
+    $response->assertStatus(201)
         ->assertJsonStructure([
             'data' => [
                 'id',
@@ -36,7 +36,7 @@ test('user can add money to wallet', function (): void {
             ],
         ]);
 
-    expect($this->wallet->fresh()->balance)->toBe(1500.00);
+    expect((float) $this->wallet->fresh()->balance)->toBe(1500.00);
 });
 
 test('user can view transaction history', function (): void {

@@ -16,8 +16,8 @@ final class AddWalletBalanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required|numeric|min:10|max:10000',
-            'payment_method' => 'required|in:stripe,manual',
+            'amount' => ['required', 'numeric', 'min:10', 'max:10000'],
+            'payment_method' => ['required', 'in:stripe,manual'],
         ];
     }
 }

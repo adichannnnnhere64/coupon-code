@@ -10,7 +10,7 @@ final readonly class PhoneNumber
 {
     public function __construct(private string $number)
     {
-        throw_unless(preg_match('/^\+?[1-9]\d{1,14}$/', $number), new InvalidArgumentException('Invalid phone number format'));
+        throw_unless(preg_match('/^\+?[1-9]\d{1,14}$/', $number), InvalidArgumentException::class, 'Invalid phone number format');
     }
 
     public function toString(): string

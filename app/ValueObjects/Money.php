@@ -9,13 +9,13 @@ use InvalidArgumentException;
 final readonly class Money
 {
     public function __construct(
-        private float $amount,
+        private float|string $amount,
         private string $currency = 'INR'
     ) {
-        throw_if($amount < 0, new InvalidArgumentException('Money amount cannot be negative'));
+        throw_if($amount < 0, InvalidArgumentException::class, 'Money amount cannot be negative');
     }
 
-    public function getAmount(): float
+    public function getAmount(): float|string
     {
         return $this->amount;
     }
@@ -27,14 +27,14 @@ final readonly class Money
 
     public function add(self $other): self
     {
-        throw_if($this->currency !== $other->currency, new InvalidArgumentException('Currencies must match'));
+        throw_if($this->currency !== $other->currency, InvalidArgumentException::class, 'Currencies must match');
 
         return new self($this->amount + $other->amount, $this->currency);
     }
 
     public function subtract(self $other): self
     {
-        throw_if($this->currency !== $other->currency, new InvalidArgumentException('Currencies must match'));
+        throw_if($this->currency !== $other->currency, InvalidArgumentException::class, 'Currencies must match');
 
         return new self($this->amount - $other->amount, $this->currency);
     }

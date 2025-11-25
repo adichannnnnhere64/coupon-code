@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Exceptions\CustomException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,5 +17,16 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+
+        $exceptions->renderable(function (CustomException $e) {
+            $internalCode = $e->getInternalCode();
+
+            return response()->json([
+                'status' => 'error',
+                'code' => $internalCode->value,
+                'message' => $e->getMessage(),
+                'description' => $e->getDescription(),
+                'details' => $internalCode->getLink(),
+            ], $e->getCode());
+        });
     })->create();

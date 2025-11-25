@@ -16,9 +16,9 @@ final class PurchaseCouponRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'coupon_id' => 'required|exists:coupons,id',
-            'delivery_methods' => 'required|array',
-            'delivery_methods.*' => 'in:sms,email,whatsapp,print',
+            'coupon_id' => ['required', 'exists:coupons,id'],
+            'delivery_methods' => ['required', 'array'],
+            'delivery_methods.*' => ['in:sms,email,whatsapp,print'],
         ];
     }
 
