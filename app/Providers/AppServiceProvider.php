@@ -14,6 +14,9 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
+        /* $this->app->singleton(MediaService::class, function ($app) { */
+        /*     return new MediaService(); */
+        /* }); */
     }
 
     public function boot(): void

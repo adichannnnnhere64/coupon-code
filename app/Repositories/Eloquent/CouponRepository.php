@@ -6,10 +6,14 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Coupon;
 use App\Repositories\Contracts\CouponRepositoryInterface;
+use Illuminate\Support\Collection;
 
 final class CouponRepository implements CouponRepositoryInterface
 {
-    public function findAvailableCoupons(int $operatorId, int $planTypeId)
+    /**
+     * @return Collection <int, Coupon>
+     * */
+    public function findAvailableCoupons(int $operatorId, int $planTypeId): Collection
     {
         return Coupon::query()->where('operator_id', $operatorId)
             ->where('plan_type_id', $planTypeId)
@@ -33,7 +37,10 @@ final class CouponRepository implements CouponRepositoryInterface
             ->decrement('stock_quantity');
     }
 
-    public function getLowStockCoupons()
+    /**
+     * @return Collection<int, Coupon>
+     * */
+    public function getLowStockCoupons(): Collection
     {
         return Coupon::query()->whereRaw('stock_quantity <= low_stock_threshold')
             ->where('is_active', true)

@@ -7,10 +7,12 @@ namespace App\Models;
 use App\Exceptions\CouponUnavailableException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-final class Coupon extends Model
+final class Coupon extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         'operator_id',
@@ -66,5 +68,38 @@ final class Coupon extends Model
     public function incrementStock(int $quantity = 1): void
     {
         $this->increment('stock_quantity', $quantity);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('images')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->withResponsiveImages();
+    }
+
+    public function registerMediaConversions($media = null): void
+    {
+        $this->addMediaConversion('thumbnail')
+            ->width(150)      // adjust width
+            ->height(150)     // adjust height
+            ->sharpen(10)
+            ->nonQueued();    // optional, generates immediately instead of queue
+    }
+
+    // Helper methods
+    protected function getImageUrlsAttribute(): array
+    {
+        return $this->getMedia('images')->map(fn($media): array => [
+            'id' => $media->id,
+            'url' => $media->getUrl(),
+            'thumbnail' => $media->getUrl('thumbnail'),
+            'name' => $media->name,
+        ])->all();
+    }
+
+    protected function getPrimaryImageUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('images');
     }
 }

@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,13 @@ Route::middleware('auth:sanctum')->group(function (): void {
     // Country and operator routes
     Route::get('/countries', [CountryController::class, 'index']);
     Route::get('/countries/{countryId}/operators', [CountryController::class, 'operators']);
+
+    Route::prefix('media')->group(function (): void {
+        Route::post('/{modelType}/{modelId}/upload', [MediaController::class, 'upload']);
+        Route::post('/{modelType}/{modelId}/upload-from-url', [MediaController::class, 'uploadFromUrl']);
+        Route::get('/{modelType}/{modelId}/images', [MediaController::class, 'getImages']);
+        Route::delete('/{modelType}/{modelId}/images/{mediaId}', [MediaController::class, 'deleteImage']);
+        Route::delete('/{modelType}/{modelId}/collection', [MediaController::class, 'clearCollection']);
+    });
+
 });

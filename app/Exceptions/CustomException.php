@@ -29,4 +29,11 @@ final class CustomException extends CoreException
             ExceptionCode::STOCK_LIMIT_EXCEEDED,
         );
     }
+
+    public static function invalidImage(): self
+    {
+        return self::new(
+            ExceptionCode::INVALID_IMAGE,
+        );
+    }
 }

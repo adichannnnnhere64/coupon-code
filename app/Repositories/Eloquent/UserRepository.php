@@ -24,13 +24,17 @@ final class UserRepository implements UserRepositoryInterface
         return User::query()->where('phone', $phone)->first();
     }
 
+    /** @param array<string, mixed> $data */
     public function create(array $data): User
     {
-        return User::query()->create($data);
+        /** @var User */
+        $user = User::query()->create($data);
+
+        return $user;
     }
 
     public function updateStatus(int $userId, string $status): bool
     {
-        return User::query()->where('id', $userId)->update(['status' => $status]);
+        return (bool) User::query()->where('id', $userId)->update(['status' => $status]);
     }
 }

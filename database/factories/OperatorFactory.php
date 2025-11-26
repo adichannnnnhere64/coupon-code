@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Country;
+use App\Models\Operator;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class OperatorFactory extends Factory
@@ -27,6 +29,26 @@ final class OperatorFactory extends Factory
             'name' => $this->getOperatorForCountry($country),
             'code' => $this->getOperatorCodeForCountry($country),
         ]);
+    }
+
+    public function withLogo(string $url = 'https://placehold.co/600x400/png', string $collection = 'default'): static
+    {
+        return $this->afterCreating(function (Operator $operator) use ($url, $collection): void {
+
+            app(MediaService::class)->attachImageFromUrl($operator, $url, $collection);
+
+        });
+    }
+
+    public function withRandomMedia(int $count = 1): static
+    {
+        return $this->afterCreating(function (Operator $operator) use ($count): void {
+            for ($i = 0; $i < $count; $i++) {
+                $operator
+                    ->addMediaFromUrl($this->faker->imageUrl(400, 400, 'business'))
+                    ->toMediaCollection('gallery');
+            }
+        });
     }
 
     public function active(): static

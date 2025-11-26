@@ -6,13 +6,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Notification;
 use App\Contracts\Services\NotificationServiceInterface;
 use App\Mail\CouponDeliveryMail;
 use App\Mail\LowStockAlertMail;
 use App\Mail\WalletCreditMail;
 use App\Models\Coupon;
 use App\Models\CouponTransaction;
+use App\Models\Notification;
 use App\Models\User;
 use App\ValueObjects\Money;
 use Exception;

@@ -17,4 +17,8 @@ return [
         'message' => 'Stock Limit Exceeded',
         'description' => 'Coupon stock limit exceeded.',
     ],
+    '10003' => [
+        'message' => 'Invalid Image',
+        'description' => 'Invalid image provided',
+    ],
 ];

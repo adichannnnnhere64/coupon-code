@@ -9,12 +9,14 @@ enum ExceptionCode: int
     case COUPON_UNAVAILABLE = 10_000;
     case INSUFFICIENT_BALANCE = 10_001;
     case STOCK_LIMIT_EXCEEDED = 10_002;
+    case INVALID_IMAGE = 10_003;
 
     public function getStatusCode(): int
     {
         $value = $this->value;
 
         return match (true) {
+            $value === 10_003 => 404,
             $value >= 10_000 => 422,
             default => 500,
         };

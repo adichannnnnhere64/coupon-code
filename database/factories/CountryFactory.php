@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Country;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class CountryFactory extends Factory
@@ -29,6 +31,14 @@ final class CountryFactory extends Factory
             'currency' => $country['currency'],
             'is_active' => $this->faker->boolean(90),
         ];
+    }
+
+    public function withImage(string $url = 'https://placehold.co/600x400/png', string $collection = 'default'): static
+    {
+        return $this->afterCreating(function (Country $operator) use ($url, $collection): void {
+            app(MediaService::class)->attachImageFromUrl($operator, $url, $collection);
+
+        });
     }
 
     public function active(): static

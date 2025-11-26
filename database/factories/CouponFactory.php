@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Coupon;
 use App\Models\Operator;
 use App\Models\PlanType;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class CouponFactory extends Factory
@@ -31,6 +33,14 @@ final class CouponFactory extends Factory
             'is_active' => $this->faker->boolean(90),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
         ];
+    }
+
+    public function withImage(string $url = 'https://placehold.co/600x400/png', string $collection = 'default'): static
+    {
+        return $this->afterCreating(function (Coupon $operator) use ($url, $collection): void {
+            app(MediaService::class)->attachImageFromUrl($operator, $url, $collection);
+
+        });
     }
 
     public function forOperator(Operator $operator): static
