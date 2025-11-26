@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Coupon;
+use App\Models\PaymentMethod;
 use App\Models\Wallet;
 
 beforeEach(function (): void {
@@ -10,12 +11,16 @@ beforeEach(function (): void {
     $this->wallet = Wallet::factory()->forUser($this->user)->create(['balance' => 1000.00]);
 });
 
-test('user can purchase coupon', function (): void {
-    $coupon = Coupon::factory()->inStock()->active()->create(['selling_price' => 100.00]);
+test('user can purchase coupon using wallet', function (): void {
+
+    $pm = PaymentMethod::factory()->active()->wallet()->create();
+
+    $coupon = Coupon::factory()->withPaymentMethods(['wallet'])->inStock()->active()->create(['selling_price' => 100.00]);
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
         'delivery_methods' => ['sms', 'email'],
+        'payment_method' => 'wallet',
     ]);
 
     $response->assertStatus(201)
@@ -43,11 +48,14 @@ test('user can purchase coupon', function (): void {
 test('user cannot purchase out of stock coupon', function (): void {
     $this->withExceptionHandling();
 
-    $coupon = Coupon::factory()->outOfStock()->active()->create();
+    $pm = PaymentMethod::factory()->active()->wallet()->create();
+
+    $coupon = Coupon::factory()->withWalletOnly()->outOfStock()->active()->create();
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
         'delivery_methods' => ['sms'],
+        'payment_method' => 'wallet',
     ]);
 
     $response->assertStatus(422)
@@ -63,11 +71,15 @@ test('user cannot purchase with insufficient balance', function (): void {
     $this->withExceptionHandling();
 
     $this->wallet->update(['balance' => 50.00]);
-    $coupon = Coupon::factory()->inStock()->active()->create(['selling_price' => 100.00]);
+
+    $pm = PaymentMethod::factory()->active()->wallet()->create();
+
+    $coupon = Coupon::factory()->withWalletOnly()->inStock()->active()->create(['selling_price' => 100.00]);
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
         'delivery_methods' => ['sms'],
+        'payment_method' => 'wallet',
     ]);
 
     $response->assertStatus(422) // the status from your ExceptionCode

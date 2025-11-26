@@ -87,10 +87,32 @@ final class Coupon extends Model implements HasMedia
             ->nonQueued();    // optional, generates immediately instead of queue
     }
 
+    // Add this relationship to your existing Coupon model
+    public function paymentMethods()
+    {
+        return $this->belongsToMany(PaymentMethod::class, 'coupon_payment_method')
+            ->withPivot('sort_order')
+            ->withTimestamps()
+            ->orderBy('sort_order');
+    }
+
+    protected function getAvailablePaymentMethodsAttribute()
+    {
+        return $this->paymentMethods()->active()->get();
+    }
+
+    public function supportsPaymentMethod(string $paymentMethodCode): bool
+    {
+        return $this->paymentMethods()
+            ->where('code', $paymentMethodCode)
+            ->active()
+            ->exists();
+    }
+
     // Helper methods
     protected function getImageUrlsAttribute(): array
     {
-        return $this->getMedia('images')->map(fn($media): array => [
+        return $this->getMedia('images')->map(fn ($media): array => [
             'id' => $media->id,
             'url' => $media->getUrl(),
             'thumbnail' => $media->getUrl('thumbnail'),

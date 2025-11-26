@@ -19,6 +19,7 @@ final class PurchaseCouponRequest extends FormRequest
             'coupon_id' => ['required', 'exists:coupons,id'],
             'delivery_methods' => ['required', 'array'],
             'delivery_methods.*' => ['in:sms,email,whatsapp,print'],
+            'payment_method' => ['required'],
         ];
     }
 

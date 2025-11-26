@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 // tests/Unit/Models/AllModelsMediaTest.php
-use Spatie\MediaLibrary\HasMedia;
 use App\Models\Country;
 use App\Models\Coupon;
 use App\Models\Operator;
 use App\Models\PlanType;
+use Spatie\MediaLibrary\HasMedia;
 use Tests\Helpers\InteractsWithMedia;
 
 uses(InteractsWithMedia::class);

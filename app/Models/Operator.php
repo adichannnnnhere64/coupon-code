@@ -58,6 +58,11 @@ final class Operator extends Model implements HasMedia
             ->quality(85);
     }
 
+    public function hasLogo(): bool
+    {
+        return $this->hasMedia('logo');
+    }
+
     // Helper methods
     protected function getLogoUrlAttribute(): ?string
     {
@@ -71,10 +76,5 @@ final class Operator extends Model implements HasMedia
     protected function getLogoThumbnailUrlAttribute(): string
     {
         return $this->getFirstMediaUrl('logo', 'thumbnail');
-    }
-
-    public function hasLogo(): bool
-    {
-        return $this->hasMedia('logo');
     }
 }

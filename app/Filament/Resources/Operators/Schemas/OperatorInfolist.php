@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Operators\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -28,6 +29,8 @@ final class OperatorInfolist
                 TextEntry::make('updated_at')
                     ->dateTime()
                     ->placeholder('-'),
+                SpatieMediaLibraryImageEntry::make('logo')
+                    ->collection('logo'),
             ]);
     }
 }

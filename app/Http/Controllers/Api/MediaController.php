@@ -6,13 +6,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Operator;
-use App\Models\Country;
-use App\Models\Coupon;
-use App\Models\PlanType;
 use App\Exceptions\CustomException;
 use App\Http\Requests\UploadMediaFromUrlRequest;
 use App\Http\Requests\UploadMediaRequest;
+use App\Models\Country;
+use App\Models\Coupon;
+use App\Models\Operator;
+use App\Models\PlanType;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -74,7 +74,7 @@ final class MediaController extends Controller
         $collection = $request->input('collection', 'default');
 
         $images = $this->mediaService->getImages($model, $collection)
-            ->map(fn($media): array => [
+            ->map(fn ($media): array => [
                 'id' => $media->id,
                 'url' => $media->getUrl(),
                 'thumbnail' => $media->getUrl('thumbnail'),

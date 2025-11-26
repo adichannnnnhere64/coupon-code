@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,6 +19,9 @@ final class CountriesTable
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('flag')
+                    ->width(50)
+                    ->collection('flag'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('code')

@@ -28,14 +28,14 @@ final class PlanType extends Model implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
     }
 
+    public function hasIcon(): bool
+    {
+        return $this->hasMedia('icon');
+    }
+
     // Helper methods
     protected function getIconUrlAttribute(): string
     {
         return $this->getFirstMediaUrl('icon');
-    }
-
-    public function hasIcon(): bool
-    {
-        return $this->hasMedia('icon');
     }
 }

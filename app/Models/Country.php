@@ -38,14 +38,14 @@ final class Country extends Model implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
     }
 
+    public function hasFlag(): bool
+    {
+        return $this->hasMedia('flag');
+    }
+
     // Helper methods
     protected function getFlagUrlAttribute(): string
     {
         return $this->getFirstMediaUrl('flag');
-    }
-
-    public function hasFlag(): bool
-    {
-        return $this->hasMedia('flag');
     }
 }

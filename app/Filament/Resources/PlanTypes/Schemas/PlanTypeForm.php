@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PlanTypes\Schemas;
 
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -18,6 +19,8 @@ final class PlanTypeForm
                     ->required(),
                 Textarea::make('description')
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('images'),
             ]);
     }
 }

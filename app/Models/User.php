@@ -62,6 +62,11 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(CouponTransaction::class);
     }
 
+    public function isAdmin(): bool
+    {
+        return true;
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
@@ -79,5 +84,6 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->forceFill([
             'phone_verified_at' => $this->freshTimestamp(),
         ])->save();
+
     }
 }

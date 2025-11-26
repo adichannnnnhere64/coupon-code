@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('/wallet/add-balance', [WalletController::class, 'addBalance']);
     Route::get('/wallet/transactions', [WalletController::class, 'transactionHistory']);
 
+    Route::get('/coupons', [CouponController::class, 'index']);
     Route::get('/coupons/available/{operatorId}/{planTypeId}', [CouponController::class, 'available']);
     Route::post('/coupons/purchase', [CouponController::class, 'purchase']);
     Route::get('/coupons/transactions', [CouponController::class, 'transactionHistory']);

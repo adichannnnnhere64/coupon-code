@@ -17,6 +17,7 @@ final class CouponTransactionFactory extends Factory
 
         return [
             'user_id' => User::factory(),
+            'payment_method' => 'wallet',
             'coupon_id' => Coupon::factory(),
             'transaction_id' => $this->faker->unique()->bothify('TXN##??##??##??##'),
             'amount' => $this->faker->randomFloat(2, 10, 1000),

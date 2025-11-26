@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ValueObjects;
 
 use InvalidArgumentException;
+use NumberFormatter;
 
 final readonly class Money
 {
@@ -42,5 +43,21 @@ final readonly class Money
     public function equals(self $other): bool
     {
         return $this->amount === $other->amount && $this->currency === $other->currency;
+    }
+
+    public function format(): string
+    {
+        $fmt = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
+
+        return $fmt->formatCurrency((float) $this->amount, $this->currency);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'amount' => $this->amount,
+            'currency' => $this->currency,
+            'formatted' => $this->format(),
+        ];
     }
 }

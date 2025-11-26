@@ -10,24 +10,29 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class CountryFactory extends Factory
 {
-    private array $countries = [
-        ['name' => 'India', 'code' => 'IN', 'currency' => 'INR'],
-        ['name' => 'United States', 'code' => 'US', 'currency' => 'USD'],
-        ['name' => 'United Kingdom', 'code' => 'UK', 'currency' => 'GBP'],
-        ['name' => 'Canada', 'code' => 'CA', 'currency' => 'CAD'],
-        ['name' => 'Australia', 'code' => 'AU', 'currency' => 'AUD'],
-        ['name' => 'Germany', 'code' => 'DE', 'currency' => 'EUR'],
-        ['name' => 'France', 'code' => 'FR', 'currency' => 'EUR'],
-        ['name' => 'Japan', 'code' => 'JP', 'currency' => 'JPY'],
+    private const array COUNTRIES = [
+        'IN' => ['name' => 'India', 'currency' => 'INR'],
+        'US' => ['name' => 'United States', 'currency' => 'USD'],
+        'UK' => ['name' => 'United Kingdom', 'currency' => 'GBP'],
+        'CA' => ['name' => 'Canada', 'currency' => 'CAD'],
+        'AU' => ['name' => 'Australia', 'currency' => 'AUD'],
+        'DE' => ['name' => 'Germany', 'currency' => 'EUR'],
+        'FR' => ['name' => 'France', 'currency' => 'EUR'],
+        'JP' => ['name' => 'Japan', 'currency' => 'JPY'],
     ];
 
     public function definition(): array
     {
-        $country = $this->faker->unique()->randomElement($this->countries);
+        $existingCodes = Country::query()->pluck('code')->toArray();
+
+        $availableCodes = array_diff(array_keys(self::COUNTRIES), $existingCodes);
+
+        $code = $this->faker->randomElement($availableCodes);
+        $country = self::COUNTRIES[$code];
 
         return [
             'name' => $country['name'],
-            'code' => $country['code'],
+            'code' => $code,
             'currency' => $country['currency'],
             'is_active' => $this->faker->boolean(90),
         ];
@@ -35,9 +40,8 @@ final class CountryFactory extends Factory
 
     public function withImage(string $url = 'https://placehold.co/600x400/png', string $collection = 'default'): static
     {
-        return $this->afterCreating(function (Country $operator) use ($url, $collection): void {
-            app(MediaService::class)->attachImageFromUrl($operator, $url, $collection);
-
+        return $this->afterCreating(function (Country $country) use ($url, $collection): void {
+            app(MediaService::class)->attachImageFromUrl($country, $url, $collection);
         });
     }
 

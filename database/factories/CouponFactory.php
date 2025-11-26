@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\Coupon;
 use App\Models\Operator;
+use App\Models\PaymentMethod;
 use App\Models\PlanType;
 use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -98,5 +99,36 @@ final class CouponFactory extends Factory
             'denomination' => $denomination,
             'selling_price' => $denomination + $this->faker->randomFloat(2, 1, 5),
         ]);
+    }
+
+    public function withPaymentMethods(array $paymentMethodCodes = ['wallet', 'stripe']): static
+    {
+        return $this->afterCreating(function (Coupon $coupon) use ($paymentMethodCodes): void {
+            $sortOrder = 1;
+            foreach ($paymentMethodCodes as $code) {
+                $paymentMethod = PaymentMethod::query()->where('code', $code)->first();
+
+                if ($paymentMethod) {
+                    $coupon->paymentMethods()->attach($paymentMethod->id, [
+                        'sort_order' => $sortOrder++,
+                    ]);
+                }
+            }
+        });
+    }
+
+    public function withWalletOnly(): static
+    {
+        return $this->withPaymentMethods(['wallet']);
+    }
+
+    public function withAllPaymentMethods(): static
+    {
+        return $this->withPaymentMethods(['wallet', 'stripe', 'paypal']);
+    }
+
+    public function withGatewayPaymentsOnly(): static
+    {
+        return $this->withPaymentMethods(['stripe', 'paypal']);
     }
 }

@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,15 +19,19 @@ final class OperatorsTable
     {
         return $table
             ->columns([
-                TextColumn::make('country_id')
+                SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo'),
+
+                /* ->numeric() */
+                /* ->sortable(), */
+                TextColumn::make('country.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('code')
                     ->searchable(),
-                TextColumn::make('logo_url')
-                    ->searchable(),
+
                 IconColumn::make('is_active')
                     ->boolean(),
                 TextColumn::make('created_at')

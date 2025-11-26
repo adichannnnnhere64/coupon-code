@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Coupons\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -14,6 +15,8 @@ final class CouponInfolist
     {
         return $schema
             ->components([
+                SpatieMediaLibraryImageEntry::make('image')
+                    ->collection('images'),
                 TextEntry::make('operator_id')
                     ->numeric(),
                 TextEntry::make('plan_type_id')
