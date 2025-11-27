@@ -15,19 +15,14 @@ final class CouponResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            /* 'denomination' => (float) $this->denomination, */
-            /* 'selling_price' => (float) $this->selling_price, */
-
-            'selling_price' => new Money(
+            'selling_price' => (new Money(
                 amount: $this->selling_price,
-                currency: $this->operator->country->currency // dynamic!
-            )->jsonSerialize(),
-
-            'denomination' => new Money(
+                currency: $this->operator->country->currency
+            ))->jsonSerialize(),
+            'denomination' => (new Money(
                 amount: $this->denomination,
                 currency: $this->operator->country->currency
-            )->jsonSerialize(),
-
+            ))->jsonSerialize(),
             'coupon_code' => $this->coupon_code,
             'validity_days' => $this->validity_days,
             'stock_quantity' => $this->when($request->user()?->isAdmin(), $this->stock_quantity),
