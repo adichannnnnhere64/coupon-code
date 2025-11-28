@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 Route::get('storage/{path}', function ($path) {
-    dd($path);
     $file = public_path("storage/$path");
 
     if (!File::exists($file)) {
@@ -17,68 +16,64 @@ Route::get('storage/{path}', function ($path) {
     return response()->file($file);
 })->where('path', '.*');
 
-Route::get('/{path?}', function () {
-    $path = request()->path();
 
-    // 🔹 API routes
-    if (str_starts_with($path, 'api/')) {
-        return app()->handle(request());
-    }
 
-    /* if (str_starts_with($path, 'storage/')) { */
-    /*     return app()->handle(request()); */
-    /* } */
+Route::get('/{path?}', function ($path = null) {
+    $buildDir = public_path('build');
 
-    // 🔹 For root path "/" - serve index.html directly
-    if ($path === '' || $path === '/') {
-        $indexPath = public_path('build/index.html');
+    // 🔹 If no path is provided, serve index.html
+    if (!$path || $path === '/') {
+        $indexPath = $buildDir . '/index.html';
         if (File::exists($indexPath)) {
-            return response()->file($indexPath);
+            $content = File::get($indexPath);
+            return response($content, 200)
+                ->header('Content-Type', 'text/html');
         }
+
+        abort(404, 'index.html not found');
     }
 
-    // 🔹 Serve static assets (js, css, images)
-    $filePath = public_path("build{$path}");
-    if (File::exists($filePath)) {
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+    // 🔹 Clean the path
+    $path = ltrim($path, '/');
+    $filePath = $buildDir . '/' . $path;
+
+    // 🔹 Serve static assets
+    if (File::exists($filePath) && is_file($filePath)) {
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         $mimeTypes = [
-            'js' => 'application/javascript',
-            'mjs' => 'application/javascript',
-            'css' => 'text/css',
+            'js'   => 'application/javascript',
+            'mjs'  => 'application/javascript',
+            'css'  => 'text/css',
             'json' => 'application/json',
-            'png' => 'image/png',
-            'jpg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
             'jpeg' => 'image/jpeg',
-            'gif' => 'image/gif',
-            'ico' => 'image/x-icon',
-            'svg' => 'image/svg+xml',
+            'gif'  => 'image/gif',
+            'ico'  => 'image/x-icon',
+            'svg'  => 'image/svg+xml',
             'woff' => 'font/woff',
-            'woff2' => 'font/woff2',
-            'ttf' => 'font/ttf',
-            'eot' => 'application/vnd.ms-fontobject',
+            'woff2'=> 'font/woff2',
+            'ttf'  => 'font/ttf',
+            'eot'  => 'application/vnd.ms-fontobject',
+            'html' => 'text/html',
         ];
 
-        $mimeType = $mimeTypes[$extension] ?? 'text/html';
+        $mimeType = $mimeTypes[$extension] ?? 'application/octet-stream';
 
-        return response()->file($filePath, [
-            'Content-Type' => $mimeType,
-            'Cache-Control' => 'public, max-age=31536000, immutable'
-        ]);
+        $content = File::get($filePath);
+        return response($content, 200)
+            ->header('Content-Type', $mimeType)
+            ->header('Cache-Control', 'public, max-age=31536000, immutable');
     }
 
-    // 🔹 SPA Fallback - serve index.html for React Router
-    $indexPath = public_path('build/index.html');
+    // 🔹 SPA fallback - serve index.html for unknown paths (React Router)
+    $indexPath = $buildDir . '/index.html';
     if (File::exists($indexPath)) {
-        return response()->file($indexPath);
+        $content = File::get($indexPath);
+        return response($content, 200)
+            ->header('Content-Type', 'text/html');
     }
 
-    // 🔹 Debug info if index.html missing
-    return response()->json([
-        'error' => 'Build folder not found',
-        'path' => public_path('build'),
-        'exists' => File::exists(public_path('build')),
-        'index_exists' => File::exists(public_path('build/index.html')),
-        'build_contents' => File::exists(public_path('build')) ? scandir(public_path('build')) : []
-    ], 500);
+    abort(404, 'File not found');
 })->where('path', '.*');
 

@@ -85,14 +85,14 @@ class ImageService {
         imagePath: string,
         options: ImageOptions,
     ): string {
-        return `https://res.cloudinary.com/your-app/image/fetch/w_${options.width},h_${options.height},q_${options.quality},f_${options.format}/${encodeURIComponent(`http://localhost:8000${imagePath}`)}`;
+        return `https://res.cloudinary.com/your-app/image/fetch/w_${options.width},h_${options.height},q_${options.quality},f_${options.format}/${encodeURIComponent(`http://10.11.10.146:8000${imagePath}`)}`;
     }
 
     private buildLaravelUrl(imagePath: string): string {
         const isTauri =
             typeof window !== "undefined" &&
             (window as any).__TAURI__ !== undefined;
-        return isTauri ? `http://localhost:8000${imagePath}` : imagePath;
+        return isTauri ? `http://10.11.10.146:8000${imagePath}` : imagePath;
     }
 
     private getPlaceholder(width: number, height: number): string {

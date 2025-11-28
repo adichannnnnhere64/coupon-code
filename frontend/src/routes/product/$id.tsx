@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Link } from '@tanstack/react-router'
 // import { OptimizedImage } from '@/components/Image/Image'
 // import { fetchCouponById, getCouponImage } from '@/lib/api-client'  // ✅ YOUR FUNCTIONS
@@ -147,6 +147,8 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
     const images = coupon.images.map(img => getImageUrl(img.url));
   const mainImage = getCouponImage(coupon); // ✅ Use your working function
 
+    const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 space-y-2">
@@ -233,9 +235,7 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
                 <span>Buy Now</span>
                 <span className="ml-3 font-bold">${selectedPlan.price}</span>
               </button>
-              <button className="btn btn-outline btn-lg flex-1 h-12">
-                Add to Cart
-              </button>
+
             </div>
           </div>
         </div>
@@ -271,9 +271,22 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
                   <p className="font-bold text-primary">${selectedPlan.price}</p>
                 </div>
               </div>
-              <button className="btn btn-primary w-full btn-lg">
-                Pay ${selectedPlan.price} Now
-              </button>
+
+
+                            <button
+  onClick={() => {
+    // Close modal first
+    setIsCheckoutOpen(false)
+    // Navigate to checkout
+    navigate({
+      to: '/checkout',
+    })
+  }}
+  className="btn btn-primary w-full btn-lg h-12"
+>
+  <span>Proceed to Checkout</span>
+  <span className="ml-3 font-bold">${selectedPlan.price}</span>
+</button>
             </div>
           </div>
         </div>

@@ -20,7 +20,18 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "'self' customprotocol: asset:",
+        "connect-src": ["ipc: http://ipc.localhost",
+                    "http://10.11.10.146:8000"
+                ],
+        "font-src": ["https://fonts.gstatic.com"],
+        "img-src": [
+                    "'self'",
+                    "http://10.11.10.146:8000"
+                ],
+        "style-src": "'unsafe-inline' 'self' https://fonts.googleapis.com"
+      }
     }
   },
   "bundle": {

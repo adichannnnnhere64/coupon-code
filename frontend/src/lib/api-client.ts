@@ -97,10 +97,10 @@ class ApiClient {
 
     private getBaseUrl(): string {
         if (this.isTauri) {
-            return "http://localhost:8000/api";
+            return "http://10.11.10.146:8000/api";
         }
 
-        return "http://localhost:8000/api";
+        return "http://10.11.10.146:8000/api";
     }
 
     private setupInterceptors() {
@@ -208,7 +208,7 @@ export function getImageUrl(
   console.log(`🔍 getImageUrl - isTauri: ${isTauri}, Path: "${cleanPath}"`);
 
   if (isTauri) {
-    return `http://localhost:8000${cleanPath}`;
+    return `http://10.11.10.146:8000${cleanPath}`;
   }
 
   // Web: Relative path
