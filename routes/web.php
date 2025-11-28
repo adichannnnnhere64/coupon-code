@@ -6,6 +6,17 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
+Route::get('storage/{path}', function ($path) {
+    dd($path);
+    $file = public_path("storage/$path");
+
+    if (!File::exists($file)) {
+        abort(404);
+    }
+
+    return response()->file($file);
+})->where('path', '.*');
+
 Route::get('/{path?}', function () {
     $path = request()->path();
 
@@ -13,6 +24,10 @@ Route::get('/{path?}', function () {
     if (str_starts_with($path, 'api/')) {
         return app()->handle(request());
     }
+
+    /* if (str_starts_with($path, 'storage/')) { */
+    /*     return app()->handle(request()); */
+    /* } */
 
     // 🔹 For root path "/" - serve index.html directly
     if ($path === '' || $path === '/') {
@@ -23,7 +38,7 @@ Route::get('/{path?}', function () {
     }
 
     // 🔹 Serve static assets (js, css, images)
-    $filePath = public_path("build/{$path}");
+    $filePath = public_path("build{$path}");
     if (File::exists($filePath)) {
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         $mimeTypes = [

@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 /* Route::post('/register', [AuthController::class, 'register']); */
 /* Route::post('/login', [AuthController::class, 'login']); */
 
+Route::get('/coupons/{id}', [CouponController::class, 'show']);
+Route::get('/coupons', [CouponController::class, 'index']);
+Route::get('/coupons/available/{operatorId}/{planTypeId}', [CouponController::class, 'available']);
+Route::post('/coupons/purchase', [CouponController::class, 'purchase']);
+Route::get('/coupons/transactions', [CouponController::class, 'transactionHistory']);
+
 Route::middleware('auth:sanctum')->group(function (): void {
     /* Route::get('/user', [AuthController::class, 'user']); */
     /* Route::post('/logout', [AuthController::class, 'logout']); */
@@ -21,11 +27,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('/wallet/balance', [WalletController::class, 'balance']);
     Route::post('/wallet/add-balance', [WalletController::class, 'addBalance']);
     Route::get('/wallet/transactions', [WalletController::class, 'transactionHistory']);
-
-    Route::get('/coupons', [CouponController::class, 'index']);
-    Route::get('/coupons/available/{operatorId}/{planTypeId}', [CouponController::class, 'available']);
-    Route::post('/coupons/purchase', [CouponController::class, 'purchase']);
-    Route::get('/coupons/transactions', [CouponController::class, 'transactionHistory']);
 
     // Country and operator routes
     Route::get('/countries', [CountryController::class, 'index']);

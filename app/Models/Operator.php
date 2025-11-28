@@ -35,6 +35,7 @@ final class Operator extends Model implements HasMedia
         $this
             ->addMediaCollection('logo')
             ->singleFile()
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->registerMediaConversions(function (Media $media): void {
                 $this

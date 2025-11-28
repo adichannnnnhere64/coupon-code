@@ -75,6 +75,7 @@ final class Coupon extends Model implements HasMedia
         $this
             ->addMediaCollection('images')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->useDisk('public')
             ->withResponsiveImages();
     }
 
@@ -96,11 +97,6 @@ final class Coupon extends Model implements HasMedia
             ->orderBy('sort_order');
     }
 
-    protected function getAvailablePaymentMethodsAttribute()
-    {
-        return $this->paymentMethods()->active()->get();
-    }
-
     public function supportsPaymentMethod(string $paymentMethodCode): bool
     {
         return $this->paymentMethods()
@@ -109,15 +105,47 @@ final class Coupon extends Model implements HasMedia
             ->exists();
     }
 
+    protected function getAvailablePaymentMethodsAttribute()
+    {
+        return $this->paymentMethods()->active()->get();
+    }
+
     // Helper methods
+
     protected function getImageUrlsAttribute(): array
     {
-        return $this->getMedia('images')->map(fn ($media): array => [
+        $images = $this->getMedia('images');
+
+        // If this model has images, return them
+        if ($images->isNotEmpty()) {
+            return $images->map(fn ($media): array => [
+                'id' => $media->id,
+                'url' => $media->getUrl(),
+                'thumbnail' => $media->getUrl('thumbnail'),
+                'name' => $media->name,
+            ])->all();
+        }
+
+        // Otherwise fallback to operator logo
+        return $this->getOperatorLogoFallback();
+    }
+
+    protected function getOperatorLogoFallback(): array
+    {
+        $operator = $this->operator; // Relationship
+
+        if (! $operator || ! $operator->hasLogo()) {
+            return []; // No operator or no logo: empty result
+        }
+
+        $media = $operator->getFirstMedia('logo');
+
+        return [[
             'id' => $media->id,
-            'url' => $media->getUrl(),
+            'url' => $media->getUrl('medium'),
             'thumbnail' => $media->getUrl('thumbnail'),
             'name' => $media->name,
-        ])->all();
+        ]];
     }
 
     protected function getPrimaryImageUrlAttribute(): string

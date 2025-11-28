@@ -23,6 +23,13 @@ final class CouponController extends Controller
         return CouponResource::collection($coupons);
     }
 
+    public function show(int $id)
+    {
+        $coupon = $this->couponService->getCoupon($id);
+
+        return CouponResource::make($coupon);
+    }
+
     public function purchase(PurchaseCouponRequest $request): CouponTransactionResource
     {
         $dto = PurchaseCouponDTO::fromRequest($request->validated());

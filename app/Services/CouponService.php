@@ -8,6 +8,7 @@ use App\Contracts\Services\NotificationServiceInterface;
 use App\DTOs\PaymentIntentDTO;
 use App\DTOs\PurchaseCouponDTO;
 use App\Exceptions\CustomException;
+use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
 use App\Models\CouponTransaction;
 use App\Repositories\Contracts\CouponRepositoryInterface;
@@ -42,6 +43,15 @@ final readonly class CouponService
         $perPage = $filters['per_page'] ?? 15;
 
         return $query->paginate($perPage);
+    }
+
+    public function getCoupon(int $id)
+    {
+        $coupon = Coupon::query()
+            ->where('is_active', true)
+            ->where('id', $id)->firstOrFail();
+
+        return $coupon;
     }
 
     public function getAvailableCoupons(int $operatorId, int $planTypeId)

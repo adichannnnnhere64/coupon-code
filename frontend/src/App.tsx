@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import AppLayout from './layouts/AppLayout'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// import { httpBatchLink } from '@trpc/client'; // optional
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 3,
+            staleTime: 5 * 60 * 1000,
+        },
+    },
+});
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+            <QueryClientProvider client={queryClient}>
+                <AppLayout>
+                    <div className="p-6">
+                        <h1 className="text-3xl font-bold">Welcome to Swag</h1>
+                        <p className="mt-4 text-base-content/80">
+                            This is your main content. The navbar and dock stay fixed.
+                        </p>
+                    </div>
+                </AppLayout>
+            </QueryClientProvider>
+        </>
+    )
 }
 
 export default App
