@@ -9,18 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SuccessRouteImport } from './routes/success'
 import { Route as SettingRouteImport } from './routes/setting'
 import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
-import { Route as ProductIdRouteImport } from './routes/product/$id'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as PublicLoginRouteImport } from './routes/_public/login'
+import { Route as AuthenticatedSuccessRouteImport } from './routes/_authenticated/success'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCheckoutIndexRouteImport } from './routes/_authenticated/checkout/index'
+import { Route as AuthenticatedProductIdRouteImport } from './routes/_authenticated/product/$id'
 
-const SuccessRoute = SuccessRouteImport.update({
-  id: '/success',
-  path: '/success',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SettingRoute = SettingRouteImport.update({
   id: '/setting',
   path: '/setting',
@@ -31,86 +30,123 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
-  id: '/checkout/',
-  path: '/checkout/',
-  getParentRoute: () => rootRouteImport,
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
 } as any)
-const ProductIdRoute = ProductIdRouteImport.update({
+const AuthenticatedSuccessRoute = AuthenticatedSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCheckoutIndexRoute =
+  AuthenticatedCheckoutIndexRouteImport.update({
+    id: '/checkout/',
+    path: '/checkout/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProductIdRoute = AuthenticatedProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/setting': typeof SettingRoute
-  '/success': typeof SuccessRoute
-  '/product/$id': typeof ProductIdRoute
-  '/checkout': typeof CheckoutIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/success': typeof AuthenticatedSuccessRoute
+  '/login': typeof PublicLoginRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/product/$id': typeof AuthenticatedProductIdRoute
+  '/checkout': typeof AuthenticatedCheckoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/setting': typeof SettingRoute
-  '/success': typeof SuccessRoute
-  '/product/$id': typeof ProductIdRoute
-  '/checkout': typeof CheckoutIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/success': typeof AuthenticatedSuccessRoute
+  '/login': typeof PublicLoginRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/product/$id': typeof AuthenticatedProductIdRoute
+  '/checkout': typeof AuthenticatedCheckoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/profile': typeof ProfileRoute
   '/setting': typeof SettingRoute
-  '/success': typeof SuccessRoute
-  '/product/$id': typeof ProductIdRoute
-  '/checkout/': typeof CheckoutIndexRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/success': typeof AuthenticatedSuccessRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/product/$id': typeof AuthenticatedProductIdRoute
+  '/_authenticated/checkout/': typeof AuthenticatedCheckoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/profile'
     | '/setting'
+    | '/dashboard'
     | '/success'
+    | '/login'
+    | '/'
     | '/product/$id'
     | '/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/setting' | '/success' | '/product/$id' | '/checkout'
-  id:
-    | '__root__'
-    | '/'
+  to:
     | '/profile'
     | '/setting'
+    | '/dashboard'
     | '/success'
+    | '/login'
+    | '/'
     | '/product/$id'
-    | '/checkout/'
+    | '/checkout'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_public'
+    | '/profile'
+    | '/setting'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/success'
+    | '/_public/login'
+    | '/_authenticated/'
+    | '/_authenticated/product/$id'
+    | '/_authenticated/checkout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   ProfileRoute: typeof ProfileRoute
   SettingRoute: typeof SettingRoute
-  SuccessRoute: typeof SuccessRoute
-  ProductIdRoute: typeof ProductIdRoute
-  CheckoutIndexRoute: typeof CheckoutIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/success': {
-      id: '/success'
-      path: '/success'
-      fullPath: '/success'
-      preLoaderRoute: typeof SuccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/setting': {
       id: '/setting'
       path: '/setting'
@@ -125,37 +161,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/checkout/': {
-      id: '/checkout/'
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_authenticated/success': {
+      id: '/_authenticated/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof AuthenticatedSuccessRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/checkout/': {
+      id: '/_authenticated/checkout/'
       path: '/checkout'
       fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedCheckoutIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/product/$id': {
-      id: '/product/$id'
+    '/_authenticated/product/$id': {
+      id: '/_authenticated/product/$id'
       path: '/product/$id'
       fullPath: '/product/$id'
-      preLoaderRoute: typeof ProductIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedProductIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSuccessRoute: typeof AuthenticatedSuccessRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedProductIdRoute: typeof AuthenticatedProductIdRoute
+  AuthenticatedCheckoutIndexRoute: typeof AuthenticatedCheckoutIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSuccessRoute: AuthenticatedSuccessRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedProductIdRoute: AuthenticatedProductIdRoute,
+  AuthenticatedCheckoutIndexRoute: AuthenticatedCheckoutIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+interface PublicRouteChildren {
+  PublicLoginRoute: typeof PublicLoginRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicLoginRoute: PublicLoginRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   ProfileRoute: ProfileRoute,
   SettingRoute: SettingRoute,
-  SuccessRoute: SuccessRoute,
-  ProductIdRoute: ProductIdRoute,
-  CheckoutIndexRoute: CheckoutIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

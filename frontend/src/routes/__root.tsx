@@ -1,18 +1,22 @@
 import * as React from 'react'
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import AppLayout from '../layouts/AppLayout'
+import { Outlet, ScrollRestoration, createRootRouteWithContext } from '@tanstack/react-router'
 import '../App.css'
+import { useAuthStore } from '../stores/useAuthStore'
 
-export const Route = createRootRoute({
+interface RouterContext {
+    auth: ReturnType<typeof useAuthStore>
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
     component: RootComponent,
 })
 
 function RootComponent() {
+
     return (
         <React.Fragment>
-            <AppLayout>
-                <Outlet />
-            </AppLayout>
+            <ScrollRestoration />
+            <Outlet />
         </React.Fragment>
     )
 }

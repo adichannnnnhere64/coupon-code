@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace App\Services\PaymentGateways;
 
-use Illuminate\Support\Str;
 use App\Contracts\Services\PaymentGatewayInterface;
 use App\DTOs\PaymentConfirmationDTO;
 use App\DTOs\PaymentIntentDTO;
@@ -16,6 +15,7 @@ use App\ValueObjects\Money;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 final class WalletGateway implements PaymentGatewayInterface
 {

@@ -45,7 +45,7 @@ final class CouponResource extends JsonResource
                 'name' => $this->planType->name,
                 'description' => $this->planType->description,
             ],
-            'images'  => $this->image_urls,
+            'images' => $this->image_urls,
             'created_at' => $this->created_at->toISOString(),
             'updated_at' => $this->updated_at->toISOString(),
         ];

@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\NotificationServiceInterface;
-use App\Mail\CouponDeliveryMail;
 use App\Mail\LowStockAlertMail;
 use App\Mail\WalletCreditMail;
 use App\Models\Coupon;
@@ -103,16 +102,6 @@ final class NotificationService implements NotificationServiceInterface
         ]);
     }
 
-    private function sendCouponEmail(CouponTransaction $transaction): void
-    {
-        try {
-            Mail::to($transaction->user->email)
-                ->send(new CouponDeliveryMail($transaction));
-        } catch (Exception $e) {
-            FacadesLog::error('Failed to send coupon email: '.$e->getMessage());
-        }
-    }
-
     private function sendWalletCreditEmail(User $user, Money $amount, float|string $newBalance): void
     {
         try {
@@ -135,22 +124,6 @@ final class NotificationService implements NotificationServiceInterface
         } catch (Exception $e) {
             FacadesLog::error('Failed to send low stock alert email: '.$e->getMessage());
         }
-    }
-
-    // Keep your existing SMS, WhatsApp, and other methods...
-    private function sendCouponSMS(): void
-    {
-        // SMS implementation
-    }
-
-    private function sendCouponWhatsApp(): void
-    {
-        // WhatsApp implementation
-    }
-
-    private function generatePrintableCoupon(): void
-    {
-        // PDF generation implementation
     }
 
     private function sendPushNotification(): void

@@ -36,12 +36,6 @@ final class PaymentMethod extends Model
             ->withTimestamps();
     }
 
-    #[Scope]
-    protected function active($query)
-    {
-        return $query->where('is_active', true);
-    }
-
     public function isWallet(): bool
     {
         return $this->code === 'wallet';
@@ -50,5 +44,11 @@ final class PaymentMethod extends Model
     public function isGateway(): bool
     {
         return in_array($this->code, ['stripe', 'paypal']);
+    }
+
+    #[Scope]
+    protected function active($query)
+    {
+        return $query->where('is_active', true);
     }
 }

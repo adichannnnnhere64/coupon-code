@@ -6,13 +6,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Services\PaymentGateways\StripeGateway;
-use App\Services\PaymentGateways\PayPalGateway;
-use App\Services\PaymentGateways\WalletGateway;
 use App\Contracts\Services\PaymentGatewayInterface;
 use App\DTOs\PaymentConfirmationDTO;
 use App\DTOs\PaymentIntentDTO;
 use App\Models\Coupon;
+use App\Services\PaymentGateways\PayPalGateway;
+use App\Services\PaymentGateways\StripeGateway;
+use App\Services\PaymentGateways\WalletGateway;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;

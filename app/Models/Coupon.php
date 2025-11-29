@@ -130,7 +130,12 @@ final class Coupon extends Model implements HasMedia
         return $this->getOperatorLogoFallback();
     }
 
-    protected function getOperatorLogoFallback(): array
+    protected function getPrimaryImageUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('images');
+    }
+
+    private function getOperatorLogoFallback(): array
     {
         $operator = $this->operator; // Relationship
 
@@ -146,10 +151,5 @@ final class Coupon extends Model implements HasMedia
             'thumbnail' => $media->getUrl('thumbnail'),
             'name' => $media->name,
         ]];
-    }
-
-    protected function getPrimaryImageUrlAttribute(): string
-    {
-        return $this->getFirstMediaUrl('images');
     }
 }

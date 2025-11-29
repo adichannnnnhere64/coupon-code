@@ -22,6 +22,7 @@ it('can list all available coupons with pagination', function (): void {
 
     $response = $this->actingAs($this->user)->getJson('/api/coupons');
 
+
     $response->assertStatus(200)
         ->assertJsonStructure([
             'data' => [

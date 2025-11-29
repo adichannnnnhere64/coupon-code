@@ -8,13 +8,11 @@ use App\Contracts\Services\NotificationServiceInterface;
 use App\DTOs\PaymentIntentDTO;
 use App\DTOs\PurchaseCouponDTO;
 use App\Exceptions\CustomException;
-use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
 use App\Models\CouponTransaction;
 use App\Repositories\Contracts\CouponRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\ValueObjects\Money;
-use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -47,11 +45,9 @@ final readonly class CouponService
 
     public function getCoupon(int $id)
     {
-        $coupon = Coupon::query()
+        return Coupon::query()
             ->where('is_active', true)
             ->where('id', $id)->firstOrFail();
-
-        return $coupon;
     }
 
     public function getAvailableCoupons(int $operatorId, int $planTypeId)
@@ -66,7 +62,7 @@ final readonly class CouponService
         throw_unless($coupon, CustomException::couponUnavailable());
 
         // Check if coupon supports the selected payment method
-        throw_unless($coupon->supportsPaymentMethod($dto->paymentMethod), Exception::class, 'Selected payment method is not supported for this coupon');
+        /* throw_unless($coupon->supportsPaymentMethod($dto->paymentMethod), Exception::class, 'Selected payment method is not supported for this coupon'); */
 
         // Handle wallet payment separately
         if ($dto->paymentMethod === 'wallet') {

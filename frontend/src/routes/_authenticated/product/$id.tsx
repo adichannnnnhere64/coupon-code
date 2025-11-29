@@ -5,8 +5,8 @@ import { Link } from '@tanstack/react-router'
 // import type { Coupon } from '@/lib/api-client'
 import { useState } from 'react'
 import { Suspense } from 'react'
-import { OptimizedImage } from '../../components/Image/Image'
-import { fetchCouponById, getCouponImage, getImageUrl, type Coupon } from '../../lib/api-client'
+import { OptimizedImage } from '../../../components/Image/Image'
+import { fetchCouponById, getCouponImage, getImageUrl, type Coupon } from '../../../lib/api-client'
 
 // ✅ Your existing plans
 const plans = [
@@ -272,14 +272,39 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
                 </div>
               </div>
 
+{/**/}
+{/*                             <button */}
+{/*   onClick={() => { */}
+{/*     // Close modal first */}
+{/*     setIsCheckoutOpen(false) */}
+{/*     // Navigate to checkout */}
+{/*     navigate({ */}
+{/*       to: '/checkout', */}
+{/*     }) */}
+{/*   }} */}
+{/*   className="btn btn-primary w-full btn-lg h-12" */}
+{/* > */}
+{/*   <span>Proceed to Checkout</span> */}
+{/*   <span className="ml-3 font-bold">${selectedPlan.price}</span> */}
+{/* </button> */}
+{/**/}
 
                             <button
   onClick={() => {
     // Close modal first
     setIsCheckoutOpen(false)
-    // Navigate to checkout
+    // Navigate to checkout WITH REAL DATA
     navigate({
       to: '/checkout',
+      search: (prev) => ({
+        ...prev,
+        couponId: coupon.id,
+        planId: selectedPlan.id,
+        amount: selectedPlan.price,
+        planName: selectedPlan.name,
+        planData: selectedPlan.data,
+        planSpeed: selectedPlan.speed,
+      }),
     })
   }}
   className="btn btn-primary w-full btn-lg h-12"
@@ -287,6 +312,7 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
   <span>Proceed to Checkout</span>
   <span className="ml-3 font-bold">${selectedPlan.price}</span>
 </button>
+
             </div>
           </div>
         </div>
@@ -295,7 +321,7 @@ const ProductDetail: React.FC<{ coupon: Coupon }> = ({ coupon }) => {
   )
 }
 
-export const Route = createFileRoute('/product/$id')({
+export const Route = createFileRoute('/_authenticated/product/$id')({
   loader: async ({ params }) => {
     const { id } = params
 

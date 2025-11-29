@@ -1,14 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import useEmblaCarousel from 'embla-carousel-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import ProductList from '../components/Product/ProductList'
-import { api } from '../lib/api-client'
-import { useEffect } from 'react'
+import ProductList from '../../components/Product/ProductList'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_authenticated/')({
     component: Home,
 })
-
 
 function Home() {
 
@@ -17,27 +14,7 @@ function Home() {
         align: 'start',
         dragFree: false, // important
         containScroll: 'trimSnaps', // prevents weird jumps
-        // watchDrag: (emblaApi, event) => {
-        //     // This forces Embla to work even when WebView is being weird
-        //     const isTouch = event.pointerType === 'touch' || event.touches
-        //     const isMouse = event.pointerType === 'mouse'
-        //     return isTouch || isMouse
-        // },
     })
-
-    console.log('liba');
-
-
-    useEffect(function () {
-
-
-    let v = api.get('/coupons');
-
-        console.log(v);
-    });
-
-
-    // const users = await api.get('/users');
 
     const queryClient = new QueryClient();
 
@@ -52,7 +29,7 @@ function Home() {
                             {/* Slide 1 */}
                             <div className="embla__slide flex-[0_0_100%] min-w-0">
                                 <div className="relative">
-                                    <img src="/b3.jpg" alt="Latest Phones"
+                                    <img src="../b3.jpg" alt="Latest Phones"
                                         className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                     <div className="absolute bottom-8 left-8 text-white">
@@ -61,32 +38,24 @@ function Home() {
                                 </div>
                             </div>
 
-                            {/* Slide 2 */}
                             <div className="embla__slide flex-[0_0_100%] min-w-0">
                                 <div className="relative">
-                                    <img src="/b2.jpg" alt="Premium Collection"
+                                    <img src="../b2.jpg" alt="Premium Collection"
                                         className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                     <div className="absolute bottom-8 left-8 text-white">
-                                        {/* <h2 className="text-3xl sm:text-5xl font-bold mb-2">Premium Collection</h2> */}
-                                        {/* <p className="text-lg sm:text-xl opacity-90">Flagship devices that redefine
-                                    excellence */}
-                                        {/* </p> */}
+
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Slide 3 */}
                             <div className="embla__slide flex-[0_0_100%] min-w-0">
                                 <div className="relative">
-                                    <img src="/b1.jpg" alt="Best Deals"
+                                    <img src="../b1.jpg" alt="Best Deals"
                                         className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                     <div className="absolute bottom-8 left-8 text-white">
-                                        {/* <h2 className="text-3xl sm:text-5xl font-bold mb-2">Unbeatable Deals</h2> */}
-                                        {/* <p className="text-lg sm:text-xl opacity-90">Limited time offers on top brands</p>
-                                */}
-                                        {/* <button className="mt-4 btn btn-primary">Shop Now</button> */}
+
                                     </div>
                                 </div>
                             </div>
@@ -95,11 +64,11 @@ function Home() {
                 </div>
 
                 <QueryClientProvider client={queryClient}>
-                {/* Featured Products Section */}
-                <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-center mb-10">Rigodon</h2>
-                        <ProductList/>
-                </div>
+                    {/* Featured Products Section */}
+                    <div className="mb-8">
+                        <h2 className="text-3xl font-bold text-center mb-10">Rigodon</h2>
+                        <ProductList />
+                    </div>
                 </QueryClientProvider>
 
                 {/* Optional: Additional Sections */}

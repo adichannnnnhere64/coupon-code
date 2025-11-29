@@ -1,6 +1,8 @@
 import './App.css'
 import AppLayout from './layouts/AppLayout'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useAuthStore } from './stores/useAuthStore';
+import { useEffect } from 'react';
 // import { httpBatchLink } from '@trpc/client'; // optional
 
 const queryClient = new QueryClient({
@@ -13,6 +15,9 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+
+
+
     return (
         <>
             <QueryClientProvider client={queryClient}>
