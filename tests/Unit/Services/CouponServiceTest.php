@@ -31,7 +31,7 @@ it('can purchase available coupon', function (): void {
     $pm = PaymentMethod::factory()->active()->wallet()->create();
     $coupon = Coupon::factory()->withWalletOnly()->create(['selling_price' => 100.00]);
     $wallet = Wallet::factory()->forUser($user)->create(['balance' => 200.00]);
-    $dto = new PurchaseCouponDTO($user->id, $coupon->id, ['sms', 'email'], 'wallet');
+    $dto = new PurchaseCouponDTO($user->id, $coupon->id, 'wallet');
 
     $this->couponRepository->shouldReceive('findAvailableById')
         ->with($coupon->id)
@@ -69,7 +69,7 @@ it('can purchase available coupon', function (): void {
 
 it('throws exception for unavailable coupon', function (): void {
     $user = User::factory()->create();
-    $dto = new PurchaseCouponDTO($user->id, 999, ['sms'], 'stripe');
+    $dto = new PurchaseCouponDTO($user->id, 999, 'stripe');
 
     $this->couponRepository->shouldReceive('findAvailableById')
         ->with(999)
@@ -84,7 +84,7 @@ it('throws exception for insufficient balance', function (): void {
     $pm = PaymentMethod::factory()->active()->wallet()->create();
     $coupon = Coupon::factory()->withWalletOnly()->create(['selling_price' => 200.00]);
     $wallet = Wallet::factory()->forUser($user)->create(['balance' => 100.00]);
-    $dto = new PurchaseCouponDTO($user->id, $coupon->id, ['sms'], 'wallet');
+    $dto = new PurchaseCouponDTO($user->id, $coupon->id, 'wallet');
 
     $this->couponRepository->shouldReceive('findAvailableById')
         ->with($coupon->id)

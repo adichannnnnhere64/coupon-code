@@ -31,9 +31,9 @@ final class CouponTransactionForm
                 TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Textarea::make('delivery_methods')
-                    ->required()
-                    ->columnSpanFull(),
+                /* Textarea::make('delivery_methods') */
+                /*     ->required() */
+                /*     ->columnSpanFull(), */
                 TextInput::make('status')
                     ->required()
                     ->default('pending'),

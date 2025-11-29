@@ -17,8 +17,8 @@ final class PurchaseCouponRequest extends FormRequest
     {
         return [
             'coupon_id' => ['required', 'exists:coupons,id'],
-            'delivery_methods' => ['required', 'array'],
-            'delivery_methods.*' => ['in:sms,email,whatsapp,print'],
+            /* 'delivery_methods' => ['required', 'array'], */
+            /* 'delivery_methods.*' => ['in:sms,email,whatsapp,print'], */
             'payment_method' => ['required'],
         ];
     }
@@ -28,9 +28,9 @@ final class PurchaseCouponRequest extends FormRequest
         return [
             'coupon_id.required' => 'Please select a coupon',
             'coupon_id.exists' => 'The selected coupon is invalid',
-            'delivery_methods.required' => 'Please select at least one delivery method',
-            'delivery_methods.array' => 'Delivery methods must be an array',
-            'delivery_methods.*.in' => 'Invalid delivery method selected',
+            /* 'delivery_methods.required' => 'Please select at least one delivery method', */
+            /* 'delivery_methods.array' => 'Delivery methods must be an array', */
+            /* 'delivery_methods.*.in' => 'Invalid delivery method selected', */
         ];
     }
 }

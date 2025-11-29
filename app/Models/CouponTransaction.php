@@ -16,14 +16,14 @@ final class CouponTransaction extends Model
         'coupon_id',
         'transaction_id',
         'amount',
-        'delivery_methods',
+        /* 'delivery_methods', */
         'status',
         'coupon_delivered_at',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'delivery_methods' => 'array',
+        /* 'delivery_methods' => 'array', */
         'coupon_delivered_at' => 'datetime',
     ];
 

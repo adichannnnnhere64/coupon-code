@@ -161,7 +161,7 @@ final readonly class CouponService
                 'coupon_id' => $coupon->id,
                 'transaction_id' => 'WLT-'.Str::upper(Str::random(12)),
                 'amount' => $coupon->selling_price,
-                'delivery_methods' => json_encode($dto->deliveryMethods),
+                /* 'delivery_methods' => json_encode($dto->deliveryMethods), */
                 'status' => 'success',
                 'coupon_delivered_at' => now(),
                 'payment_method' => 'wallet',
@@ -177,7 +177,8 @@ final readonly class CouponService
             ]);
 
             // Send notifications
-            $this->notificationService->sendCouponDelivery($transaction, $dto->deliveryMethods);
+            /* $this->notificationService->sendCouponDelivery($transaction, $dto->deliveryMethods); */
+            $this->notificationService->sendCouponDelivery($transaction);
 
             return $transaction;
         });
@@ -196,7 +197,7 @@ final readonly class CouponService
             metadata: [
                 'user_id' => $dto->userId,
                 'coupon_id' => $coupon->id,
-                'delivery_methods' => $dto->deliveryMethods,
+                /* 'delivery_methods' => $dto->deliveryMethods, */
             ]
         );
 
@@ -208,7 +209,7 @@ final readonly class CouponService
             'coupon_id' => $coupon->id,
             'transaction_id' => $payment['payment_intent_id'],
             'amount' => $coupon->selling_price,
-            'delivery_methods' => json_encode($dto->deliveryMethods),
+            /* 'delivery_methods' => json_encode($dto->deliveryMethods), */
             'status' => 'pending',
             'payment_method' => $dto->paymentMethod,
             'payment_data' => $payment, // Store gateway response

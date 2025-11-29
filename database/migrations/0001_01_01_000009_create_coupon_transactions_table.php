@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('coupon_id')->constrained()->onDelete('cascade');
             $table->string('transaction_id')->unique();
             $table->decimal('amount', 8, 2);
-            $table->json('delivery_methods');
+            /* $table->json('delivery_methods'); */
             $table->string('payment_method');
             $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->timestamp('coupon_delivered_at')->nullable();

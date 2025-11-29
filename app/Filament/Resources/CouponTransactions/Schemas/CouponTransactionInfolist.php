@@ -20,8 +20,8 @@ final class CouponTransactionInfolist
                 TextEntry::make('transaction_id'),
                 TextEntry::make('amount')
                     ->numeric(),
-                TextEntry::make('delivery_methods')
-                    ->columnSpanFull(),
+                /* TextEntry::make('delivery_methods') */
+                /*     ->columnSpanFull(), */
                 TextEntry::make('status'),
                 TextEntry::make('coupon_delivered_at')
                     ->dateTime()

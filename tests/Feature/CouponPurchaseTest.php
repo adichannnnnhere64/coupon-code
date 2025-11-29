@@ -19,7 +19,7 @@ test('user can purchase coupon using wallet', function (): void {
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
-        'delivery_methods' => ['sms', 'email'],
+        /* 'delivery_methods' => ['sms', 'email'], */
         'payment_method' => 'wallet',
     ]);
 
@@ -54,7 +54,7 @@ test('user cannot purchase out of stock coupon', function (): void {
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
-        'delivery_methods' => ['sms'],
+        /* 'delivery_methods' => ['sms'], */
         'payment_method' => 'wallet',
     ]);
 
@@ -78,7 +78,7 @@ test('user cannot purchase with insufficient balance', function (): void {
 
     $response = $this->postJson('/api/coupons/purchase', [
         'coupon_id' => $coupon->id,
-        'delivery_methods' => ['sms'],
+        /* 'delivery_methods' => ['sms'], */
         'payment_method' => 'wallet',
     ]);
 

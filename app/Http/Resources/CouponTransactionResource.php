@@ -18,7 +18,7 @@ final class CouponTransactionResource extends JsonResource
             'coupon_code' => $this->coupon->coupon_code,
             'operator' => $this->coupon->operator->name,
             'denomination' => $this->coupon->denomination,
-            'delivery_methods' => $this->delivery_methods,
+            /* 'delivery_methods' => $this->delivery_methods, */
             'purchased_at' => $this->created_at->toISOString(),
             'delivered_at' => $this->coupon_delivered_at?->toISOString(),
         ];

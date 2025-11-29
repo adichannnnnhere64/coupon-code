@@ -21,28 +21,29 @@ use Illuminate\Support\Facades\Mail;
 
 final class NotificationService implements NotificationServiceInterface
 {
-    public function sendCouponDelivery(CouponTransaction $transaction, array $deliveryMethods): void
+    /* public function sendCouponDelivery(CouponTransaction $transaction, array $deliveryMethods): void */
+    public function sendCouponDelivery(CouponTransaction $transaction): void
     {
         $user = $transaction->user;
         $coupon = $transaction->coupon;
 
-        foreach ($deliveryMethods as $method) {
-            switch ($method) {
-                case 'email':
-                    $this->sendCouponEmail($transaction);
-                    break;
-                case 'sms':
-                    $this->sendCouponSMS();
-                    break;
-                case 'whatsapp':
-                    $this->sendCouponWhatsApp();
-                    break;
-                case 'print':
-                    // Generate PDF for printing
-                    $this->generatePrintableCoupon();
-                    break;
-            }
-        }
+        /* foreach ($deliveryMethods as $method) { */
+        /*     switch ($method) { */
+        /*         case 'email': */
+        /*             $this->sendCouponEmail($transaction); */
+        /*             break; */
+        /*         case 'sms': */
+        /*             $this->sendCouponSMS(); */
+        /*             break; */
+        /*         case 'whatsapp': */
+        /*             $this->sendCouponWhatsApp(); */
+        /*             break; */
+        /*         case 'print': */
+        /*             // Generate PDF for printing */
+        /*             $this->generatePrintableCoupon(); */
+        /*             break; */
+        /*     } */
+        /* } */
 
         // Log notification
         Notification::query()->create([
@@ -50,7 +51,7 @@ final class NotificationService implements NotificationServiceInterface
             'type' => 'coupon_delivery',
             'title' => 'Coupon Purchased Successfully',
             'message' => "Your {$coupon->denomination} coupon has been delivered",
-            'channels' => $deliveryMethods,
+            'channels' => [],
             'status' => 'sent',
             'sent_at' => now(),
         ]);

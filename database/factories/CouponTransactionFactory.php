@@ -13,7 +13,7 @@ final class CouponTransactionFactory extends Factory
     public function definition(): array
     {
         $status = $this->faker->randomElement(['pending', 'success', 'failed']);
-        $deliveryMethods = $this->faker->randomElements(['sms', 'email', 'whatsapp', 'print'], $this->faker->numberBetween(1, 3));
+        /* $deliveryMethods = $this->faker->randomElements(['sms', 'email', 'whatsapp', 'print'], $this->faker->numberBetween(1, 3)); */
 
         return [
             'user_id' => User::factory(),
@@ -21,7 +21,7 @@ final class CouponTransactionFactory extends Factory
             'coupon_id' => Coupon::factory(),
             'transaction_id' => $this->faker->unique()->bothify('TXN##??##??##??##'),
             'amount' => $this->faker->randomFloat(2, 10, 1000),
-            'delivery_methods' => $deliveryMethods,
+            /* 'delivery_methods' => $deliveryMethods, */
             'status' => $status,
             'coupon_delivered_at' => $status === 'success' ? $this->faker->dateTimeBetween('-1 month', 'now') : null,
             'created_at' => $this->faker->dateTimeBetween('-3 months', 'now'),
