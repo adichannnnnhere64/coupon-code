@@ -32,10 +32,10 @@ const CheckoutPage: React.FC = () => {
   const planSpeed = search.planSpeed || '50Mbps';
 
   // Get real wallet balance from user
-  const walletBalance = user?.data?.wallet?.balance || 0;
-    console.log(user);
+  const walletBalance = user?.data?.wallet?.balance ?? user?.wallet?.balance ?? 0;
 
   // Check if wallet has sufficient balance
+  // const hasSufficientBalance = walletBalance >= amount;
   const hasSufficientBalance = walletBalance >= amount;
 
   const handlePaymentMethodSelect = (method: 'paypal' | 'wallet' | 'stripe') => {

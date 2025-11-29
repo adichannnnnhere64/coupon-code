@@ -1,6 +1,6 @@
 // src/layouts/MobileLayout.tsx
 import { Link, useMatchRoute, useRouter } from '@tanstack/react-router'
-import { Home, User, Settings, LogOut } from 'lucide-react'
+import { Home, User, Settings, LogOut, Store } from 'lucide-react'
 import { useAuthStore } from '../stores/useAuthStore'
 
 interface MobileLayoutProps {
@@ -9,6 +9,7 @@ interface MobileLayoutProps {
 
 const NAV_ITEMS = [
     { to: '/dashboard', icon: Home, label: 'Home' },
+    { to: '/', icon: Store, label: 'Store' },
     { to: '/profile', icon: User, label: 'Profile' },
     { to: '/settings', icon: Settings, label: 'Settings' },
 ] as const
@@ -34,11 +35,16 @@ function UserDropdown() {
             </div>
             <ul className="menu dropdown-content rounded-box z-50 mt-3 w-52 bg-base-100 p-2 shadow">
                 <li>
+                    <Link to="/">Store</Link>
+                </li>
+                <li>
                     <Link to="/profile">Profile</Link>
                 </li>
                 <li>
                     <Link to="/settings">Settings</Link>
                 </li>
+
+
                 <li className="border-t border-base-300 mt-2 pt-2">
                     <button onClick={handleLogout} className="text-error flex gap-2">
                         <LogOut className="w-4" /> Logout
